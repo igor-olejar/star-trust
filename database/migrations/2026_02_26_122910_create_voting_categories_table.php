@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('voting_categories', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->unsignedInteger('target_type_id')->constrained(table: 'user_types');
+            $table->decimal('weight', 3, 2)->default(1.00);
             $table->timestamps();
         });
     }
