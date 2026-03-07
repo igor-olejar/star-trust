@@ -46,7 +46,8 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'user_type_id' => UserType::class,
+            'user_type_id' => \App\UserType::class,
+            'socials' => 'array',
         ];
     }
 

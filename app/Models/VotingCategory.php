@@ -17,7 +17,7 @@ class VotingCategory extends Model
     protected function casts(): array
     {
         return [
-            'id' => VotingCategory::class,
+            //'id' => VotingCategory::class,
         ];
     }
 }
