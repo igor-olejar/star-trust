@@ -13,4 +13,11 @@ class VotingCategory extends Model
     {
         return $this->hasMany(RatingItem::class);
     }
+
+    protected function casts(): array
+    {
+        return [
+            'id' => VotingCategory::class,
+        ];
+    }
 }

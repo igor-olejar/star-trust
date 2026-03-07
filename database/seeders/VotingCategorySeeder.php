@@ -23,7 +23,7 @@ class VotingCategorySeeder extends Seeder
             ['name' => 'Safety/Security', 'target_type_id' => 1, 'weight' => 0.3],
             // Promoter categories
             ['name' => 'Promo efforts', 'target_type_id' => 3, 'weight' => 0.4],
-            ['name' => 'Communication', 'target_type_id' => 3, 'weight' => 0.3],
+            //['name' => 'Communication', 'target_type_id' => 3, 'weight' => 0.3],
             ['name' => 'Organisation', 'target_type_id' => 3, 'weight' => 0.3],
         ];
 
