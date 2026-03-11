@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Actions\Auth\RegisterUserAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\RegisterRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\Events\Registered;
+//use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -15,28 +20,17 @@ class RegisterController extends Controller
         return view('auth.register', compact('selectedType'));
     }
 
-    public function register(Request $request)//: RedirectResponse
+    public function register(RegisterRequest $request, RegisterUserAction $registerUserAction): RedirectResponse
     {
-        /*
-        // Validate the request data
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
+        $validated = $request->validated();
 
-        // Create the user
-        $user = \App\Models\User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-        ]);
-
-        // Log the user in
-        auth()->login($user);
-
-        // Redirect to the intended page or home
-        return redirect()->intended('/');
-        */
+        try {
+            $user = $registerUserAction->execute($validated);
+            event(new Registered($user));
+            Auth::login($user);
+            return redirect('dashboard');
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Registration failed. Please try again.']);
+        }
     }
 }
