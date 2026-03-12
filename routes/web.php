@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\View\View;
 
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 
@@ -35,19 +36,18 @@ Route::get('/email/verify/{id}/{hash}', function (
 //    return back()->with('message', 'Verification link sent!');
 //})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
-Route::get('/login', function () {
-    return redirect()->route('login');
+Route::get('/login', function(): View {
+    return view('auth.login');
 })->name('login');
 
-Route::get('/logout', function () {
+Route::get('/logout', function (): RedirectResponse {
     Auth::logout();
     return redirect()->route('landing');
 })->name('logout');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        dd('boom');
-        //return view('dashboard');
+    Route::get('/dashboard', function (): View {
+        return view('dashboard');
     })->name('dashboard');
     //Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     //Route::post('/ratings', [RatingController::class, 'store'])->name('ratings.store');
