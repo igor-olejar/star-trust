@@ -12,7 +12,7 @@ return new class () extends Migration {
     {
         Schema::table('users', function (Blueprint $table) {
             $table->foreignId('user_type_id');
-            $table->enum('status', ['pending', 'verified', 'blocked', 'rejected'])->default('pending');
+            $table->enum('status', ['pending', 'verified', 'blocked', 'rejected', 'active'])->default('pending');
             $table->string('city')->nullable();
             $table->string('country_code', 2)->nullable();
             $table->json('socials')->nullable();

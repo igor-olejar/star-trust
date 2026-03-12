@@ -1,7 +1,9 @@
 <?php
 
+use App\Actions\Auth\ChangeUserStatusAction;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\LandingController;
+use App\UserStatus;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,14 +15,18 @@ Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->na
 route::post('/register', [RegisterController::class, 'register']);
 
 // 1. The "Notice" page (tells user to check their email)
-Route::get('/email/verify', function () {
-    return view('auth.verify-email');
-})->middleware('auth')->name('verification.notice');
+//Route::get('/email/verify', function () {
+//    return view('auth.verify-email');
+//})->middleware('auth')->name('verification.notice');
 
 // 2. The "Verify" handler (the link in the email points here)
-Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request): RedirectResponse {
+Route::get('/email/verify/{id}/{hash}', function (
+        EmailVerificationRequest $request,
+        ChangeUserStatusAction $changeUserStatusAction,
+    ): RedirectResponse {
     $request->fulfill();
-    return redirect('/dashboard');
+    $changeUserStatusAction->execute($request->user(), UserStatus::VERIFIED);
+    return redirect('/dashboard')->with('message', 'Account verified successfully!');
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
 // 3. The "Resend" handler
