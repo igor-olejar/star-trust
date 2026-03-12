@@ -28,7 +28,7 @@ class RegisterController extends Controller
             $user = $registerUserAction->execute($validated);
             event(new Registered($user));
             Auth::login($user);
-            return redirect('dashboard');
+            return redirect('dashboard')->with('message', 'Registration successful! Please check your email to verify your account.');
         } catch (\Exception $e) {
             return back()->withErrors(['error' => 'Registration failed. Please try again.']);
         }

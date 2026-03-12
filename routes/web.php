@@ -6,7 +6,7 @@ use App\Http\Controllers\LandingController;
 use App\UserStatus;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingController::class, 'index'])->name('landing');
@@ -21,21 +21,34 @@ route::post('/register', [RegisterController::class, 'register']);
 
 // 2. The "Verify" handler (the link in the email points here)
 Route::get('/email/verify/{id}/{hash}', function (
-        EmailVerificationRequest $request,
-        ChangeUserStatusAction $changeUserStatusAction,
-    ): RedirectResponse {
+    EmailVerificationRequest $request,
+    ChangeUserStatusAction $changeUserStatusAction,
+): RedirectResponse {
     $request->fulfill();
     $changeUserStatusAction->execute($request->user(), UserStatus::VERIFIED);
     return redirect('/dashboard')->with('message', 'Account verified successfully!');
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
 // 3. The "Resend" handler
-Route::post('/email/verification-notification', function (Request $request): RedirectResponse {
-    $request->user()->sendEmailVerificationNotification();
-    return back()->with('message', 'Verification link sent!');
-})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+//Route::post('/email/verification-notification', function (Request $request): RedirectResponse {
+//    $request->user()->sendEmailVerificationNotification();
+//    return back()->with('message', 'Verification link sent!');
+//})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
+Route::get('/login', function () {
+    return redirect()->route('login');
+})->name('login');
+
+Route::get('/logout', function () {
+    Auth::logout();
+    return redirect()->route('landing');
+})->name('logout');
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', function () {
+        dd('boom');
+        //return view('dashboard');
+    })->name('dashboard');
     //Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     //Route::post('/ratings', [RatingController::class, 'store'])->name('ratings.store');
 });
