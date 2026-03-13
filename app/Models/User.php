@@ -51,6 +51,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
             'user_type_id' => \App\UserType::class,
             'socials' => 'array',
+            'status' => \App\UserStatus::class,
         ];
     }
 

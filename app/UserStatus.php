@@ -26,4 +26,15 @@ enum UserStatus: string
             self::VERIFIED => 'verified',
         };
     }
+
+    public function colorClasses(): string
+    {
+        return match($this) {
+            self::PENDING => 'bg-amber-100 text-amber-700',
+            self::VERIFIED => 'bg-blue-100 text-blue-700',
+            self::ACTIVE => 'bg-emerald-100 text-emerald-700',
+            self::BLOCKED => 'bg-red-100 text-red-700',
+            self::REJECTED => 'bg-red-100 text-red-700',
+        };
+    }
 }
