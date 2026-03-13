@@ -1,6 +1,7 @@
 <?php
 
 use App\Actions\Auth\ChangeUserStatusAction;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\LandingController;
 use App\UserStatus;
@@ -36,14 +37,17 @@ Route::get('/email/verify/{id}/{hash}', function (
 //    return back()->with('message', 'Verification link sent!');
 //})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
-Route::get('/login', function(): View {
-    return view('auth.login');
-})->name('login');
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
 
 Route::get('/logout', function (): RedirectResponse {
     Auth::logout();
     return redirect()->route('landing');
 })->name('logout');
+
+Route::get('/password/reset', function (): View {
+    return view('auth.passwords.email');
+})->name('password.request');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function (): View {
