@@ -5,9 +5,11 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\PasswordController;
 use App\UserStatus;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\View\View;
@@ -46,9 +48,11 @@ Route::get('/logout', function (): RedirectResponse {
     return redirect()->route('landing');
 })->name('logout');
 
-Route::get('/password/reset', function (): View {
-    return view('auth.passwords.email');
+Route::get('/password/reset', function (Request $request): View {
+    return view('auth.passwords.reset', ['request' => $request]);
 })->name('password.request');
+
+Route::post('/password/reset', [PasswordController::class, 'reset'])->name('password.reset');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
