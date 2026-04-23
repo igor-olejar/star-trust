@@ -45,6 +45,10 @@
                 <p class="text-xs font-bold uppercase tracking-wider text-slate-500">Admin actions</p>
                 <div class="mt-4 space-y-2">
                     <a href="{{ route('admin.users.review') }}" class="block text-sm font-semibold text-indigo-600 hover:underline">Review users</a>
+                    <a href="{{ route('admin.users.list.pending') }}" class="block text-sm font-semibold text-indigo-600 hover:underline">View pending users</a>
+                    <a href="{{ route('admin.users.list.active') }}" class="block text-sm font-semibold text-indigo-600 hover:underline">View active users</a>
+                    <a href="{{ route('admin.users.list.blocked') }}" class="block text-sm font-semibold text-indigo-600 hover:underline">View blocked users</a>
+                    <a href="{{ route('admin.users.list.rejected') }}" class="block text-sm font-semibold text-indigo-600 hover:underline">View rejected users</a>
                     <a href="#" class="block text-sm font-semibold text-indigo-600 hover:underline">Manage weights (next)</a>
                 </div>
             </div>
