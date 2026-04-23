@@ -15,7 +15,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
             <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                <p class="text-xs font-bold uppercase tracking-wider text-slate-500">Users pending review</p>
+                <p class="text-xs font-bold uppercase tracking-wider text-slate-500">Users awaiting approval</p>
                 <p class="text-3xl font-bold mt-2 text-slate-900">{{ $pendingCount }}</p>
                 <div class="mt-3 space-y-2">
                     @forelse($pendingUsers as $user)
@@ -27,7 +27,7 @@
                             <span class="text-slate-500">{{ $user->created_at?->format('Y-m-d') }}</span>
                         </a>
                     @empty
-                        <p class="text-sm text-slate-500">No pending users.</p>
+                        <p class="text-sm text-slate-500">No users awaiting approval.</p>
                     @endforelse
                 </div>
                 <a href="{{ route('admin.users.review') }}" class="mt-4 inline-block text-sm font-semibold text-indigo-600 hover:underline">

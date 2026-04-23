@@ -21,14 +21,14 @@
 
         <div class="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
             <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
-                <p class="font-bold text-slate-900">Pending users</p>
+                <p class="font-bold text-slate-900">Verified users awaiting approval</p>
                 <p class="text-sm text-slate-500">{{ $users->count() }} total</p>
             </div>
 
             @if($users->isEmpty())
                 <div class="p-8 text-center">
-                    <p class="font-semibold text-slate-700">No users pending review.</p>
-                    <p class="text-sm text-slate-500 mt-1">When new users register, they’ll show up here.</p>
+                    <p class="font-semibold text-slate-700">No verified users awaiting approval.</p>
+                    <p class="text-sm text-slate-500 mt-1">Users appear here after verifying their email.</p>
                 </div>
             @else
                 <div class="overflow-x-auto">
@@ -73,13 +73,13 @@
                                                 View
                                             </a>
 
-                                            <form action="{{ route('admin.users.review.approve', $user) }}" method="POST">
+                                            <form action="{{ route('admin.users.review.activate', $user) }}" method="POST">
                                                 @csrf
                                                 <button
                                                     type="submit"
                                                     class="inline-flex items-center rounded-lg bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
                                                 >
-                                                    Approve
+                                                    Activate
                                                 </button>
                                             </form>
 
@@ -90,6 +90,16 @@
                                                     class="inline-flex items-center rounded-lg bg-rose-600 px-3 py-2 text-sm font-semibold text-white hover:bg-rose-700"
                                                 >
                                                     Reject
+                                                </button>
+                                            </form>
+
+                                            <form action="{{ route('admin.users.review.block', $user) }}" method="POST">
+                                                @csrf
+                                                <button
+                                                    type="submit"
+                                                    class="inline-flex items-center rounded-lg bg-slate-900 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+                                                >
+                                                    Block
                                                 </button>
                                             </form>
                                         </div>

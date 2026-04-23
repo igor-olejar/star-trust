@@ -54,13 +54,13 @@
                     <p class="font-bold text-slate-900">Actions</p>
                 </div>
                 <div class="p-6 space-y-3">
-                    <form action="{{ route('admin.users.review.approve', $user) }}" method="POST">
+                    <form action="{{ route('admin.users.review.activate', $user) }}" method="POST">
                         @csrf
                         <button
                             type="submit"
                             class="w-full inline-flex items-center justify-center rounded-lg bg-emerald-600 px-4 py-3 text-sm font-semibold text-white hover:bg-emerald-700"
                         >
-                            Approve (set Active)
+                            Activate (set Active)
                         </button>
                     </form>
 
@@ -71,6 +71,16 @@
                             class="w-full inline-flex items-center justify-center rounded-lg bg-rose-600 px-4 py-3 text-sm font-semibold text-white hover:bg-rose-700"
                         >
                             Reject
+                        </button>
+                    </form>
+
+                    <form action="{{ route('admin.users.review.block', $user) }}" method="POST">
+                        @csrf
+                        <button
+                            type="submit"
+                            class="w-full inline-flex items-center justify-center rounded-lg bg-slate-900 px-4 py-3 text-sm font-semibold text-white hover:bg-slate-800"
+                        >
+                            Block
                         </button>
                     </form>
 

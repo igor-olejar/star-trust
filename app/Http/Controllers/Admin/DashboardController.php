@@ -12,8 +12,8 @@ class DashboardController extends Controller
 {
     public function index(): View
     {
-        $pendingCount = User::where('status', UserStatus::PENDING)->count();
-        $pendingUsers = User::where('status', UserStatus::PENDING)
+        $pendingCount = User::where('status', UserStatus::VERIFIED)->count();
+        $pendingUsers = User::where('status', UserStatus::VERIFIED)
             ->orderBy('created_at')
             ->limit(5)
             ->get();
