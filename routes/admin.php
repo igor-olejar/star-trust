@@ -26,5 +26,4 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/users/list/active', [UserListController::class, 'active'])->name('users.list.active');
     Route::get('/users/list/blocked', [UserListController::class, 'blocked'])->name('users.list.blocked');
     Route::get('/users/list/rejected', [UserListController::class, 'rejected'])->name('users.list.rejected');
-    Route::get('/users/list/verified', [UserListController::class, 'verified'])->name('users.list.verified');
 });
