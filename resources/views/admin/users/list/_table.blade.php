@@ -49,6 +49,49 @@
                             >
                                 View
                             </a>
+
+                            @php
+                                $status = $user->status instanceof \App\UserStatus ? $user->status : null;
+                                $canActivate = $status && in_array($status, [\App\UserStatus::PENDING, \App\UserStatus::VERIFIED, \App\UserStatus::BLOCKED], true);
+                                $canReject = $status && in_array($status, [\App\UserStatus::PENDING, \App\UserStatus::VERIFIED, \App\UserStatus::ACTIVE], true);
+                                $canBlock = $status && in_array($status, [\App\UserStatus::VERIFIED, \App\UserStatus::ACTIVE], true);
+                            @endphp
+
+                            @if($canActivate)
+                                <form action="{{ route('admin.users.review.activate', $user) }}" method="POST">
+                                    @csrf
+                                    <button
+                                        type="submit"
+                                        class="inline-flex cursor-pointer items-center rounded-lg bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+                                    >
+                                        Activate
+                                    </button>
+                                </form>
+                            @endif
+
+                            @if($canReject)
+                                <form action="{{ route('admin.users.review.reject', $user) }}" method="POST">
+                                    @csrf
+                                    <button
+                                        type="submit"
+                                        class="inline-flex cursor-pointer items-center rounded-lg bg-rose-600 px-3 py-2 text-sm font-semibold text-white hover:bg-rose-700"
+                                    >
+                                        Reject
+                                    </button>
+                                </form>
+                            @endif
+
+                            @if($canBlock)
+                                <form action="{{ route('admin.users.review.block', $user) }}" method="POST">
+                                    @csrf
+                                    <button
+                                        type="submit"
+                                        class="inline-flex cursor-pointer items-center rounded-lg bg-slate-900 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+                                    >
+                                        Block
+                                    </button>
+                                </form>
+                            @endif
                         </div>
                     </td>
                 </tr>

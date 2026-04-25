@@ -77,6 +77,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Rating::class, 'target_id');
     }
 
+    public function statusChanges(): HasMany
+    {
+        return $this->hasMany(UserStatusChange::class);
+    }
+
     public function averageScore(): mixed
     {
         return $this->ratingsReceived()->avg('overall_rating') ?: 0;

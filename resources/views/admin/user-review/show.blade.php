@@ -54,35 +54,54 @@
                     <p class="font-bold text-slate-900">Actions</p>
                 </div>
                 <div class="p-6 space-y-3">
-                    <form action="{{ route('admin.users.review.activate', $user) }}" method="POST">
-                        @csrf
-                        <button
-                            type="submit"
-                            class="w-full inline-flex items-center justify-center rounded-lg bg-emerald-600 px-4 py-3 text-sm font-semibold text-white hover:bg-emerald-700"
-                        >
-                            Activate (set Active)
-                        </button>
-                    </form>
+                    @php
+                        $status = $user->status instanceof \App\UserStatus ? $user->status : null;
+                        $canActivate = $status && in_array($status, [\App\UserStatus::PENDING, \App\UserStatus::VERIFIED, \App\UserStatus::BLOCKED], true);
+                        $canReject = $status && in_array($status, [\App\UserStatus::PENDING, \App\UserStatus::VERIFIED, \App\UserStatus::ACTIVE], true);
+                        $canBlock = $status && in_array($status, [\App\UserStatus::VERIFIED, \App\UserStatus::ACTIVE], true);
+                    @endphp
 
-                    <form action="{{ route('admin.users.review.reject', $user) }}" method="POST">
-                        @csrf
-                        <button
-                            type="submit"
-                            class="w-full inline-flex items-center justify-center rounded-lg bg-rose-600 px-4 py-3 text-sm font-semibold text-white hover:bg-rose-700"
-                        >
-                            Reject
-                        </button>
-                    </form>
+                    @if($canActivate)
+                        <form action="{{ route('admin.users.review.activate', $user) }}" method="POST">
+                            @csrf
+                            <button
+                                type="submit"
+                                class="w-full inline-flex cursor-pointer items-center justify-center rounded-lg bg-emerald-600 px-4 py-3 text-sm font-semibold text-white hover:bg-emerald-700"
+                            >
+                                Activate (set Active)
+                            </button>
+                        </form>
+                    @endif
 
-                    <form action="{{ route('admin.users.review.block', $user) }}" method="POST">
-                        @csrf
-                        <button
-                            type="submit"
-                            class="w-full inline-flex items-center justify-center rounded-lg bg-slate-900 px-4 py-3 text-sm font-semibold text-white hover:bg-slate-800"
-                        >
-                            Block
-                        </button>
-                    </form>
+                    @if($canReject)
+                        <form action="{{ route('admin.users.review.reject', $user) }}" method="POST">
+                            @csrf
+                            <button
+                                type="submit"
+                                class="w-full inline-flex cursor-pointer items-center justify-center rounded-lg bg-rose-600 px-4 py-3 text-sm font-semibold text-white hover:bg-rose-700"
+                            >
+                                Reject
+                            </button>
+                        </form>
+                    @endif
+
+                    @if($canBlock)
+                        <form action="{{ route('admin.users.review.block', $user) }}" method="POST">
+                            @csrf
+                            <button
+                                type="submit"
+                                class="w-full inline-flex cursor-pointer items-center justify-center rounded-lg bg-slate-900 px-4 py-3 text-sm font-semibold text-white hover:bg-slate-800"
+                            >
+                                Block
+                            </button>
+                        </form>
+                    @endif
+
+                    @if(!$canActivate && !$canReject && !$canBlock)
+                        <div class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+                            No actions available for this user.
+                        </div>
+                    @endif
 
                     <div class="pt-3 border-t border-slate-200">
                         <p class="text-xs text-slate-500">

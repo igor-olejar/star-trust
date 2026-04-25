@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\UserStatusChange;
 use App\Models\User;
 use App\UserStatus;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 
 class UserReviewController extends Controller
 {
@@ -28,26 +30,46 @@ class UserReviewController extends Controller
 
     public function activate(Request $request, User $user): RedirectResponse
     {
-        if ($user->status !== UserStatus::VERIFIED) {
+        if (!in_array($user->status, [UserStatus::PENDING, UserStatus::VERIFIED, UserStatus::BLOCKED], true)) {
             return redirect()
                 ->route('admin.users.review.show', $user)
-                ->with('error', 'Only verified users can be activated.');
+                ->with('error', 'Only pending, verified, or blocked users can be activated.');
         }
 
-        $user->update(['status' => UserStatus::ACTIVE]);
+        DB::transaction(function () use ($user) {
+            $from = $user->status;
+            $user->update(['status' => UserStatus::ACTIVE]);
+
+            UserStatusChange::create([
+                'user_id' => $user->id,
+                'admin_id' => auth('admin')->id(),
+                'from_status' => $from instanceof UserStatus ? $from->value : (string) $from,
+                'to_status' => UserStatus::ACTIVE->value,
+            ]);
+        });
 
         return redirect()->route('admin.users.review')->with('success', 'User approved successfully');
     }
 
     public function reject(Request $request, User $user): RedirectResponse
     {
-        if ($user->status !== UserStatus::VERIFIED) {
+        if (!in_array($user->status, [UserStatus::PENDING, UserStatus::VERIFIED, UserStatus::ACTIVE], true)) {
             return redirect()
                 ->route('admin.users.review.show', $user)
-                ->with('error', 'Only verified users can be rejected.');
+                ->with('error', 'Only pending, verified, or active users can be rejected.');
         }
 
-        $user->update(['status' => UserStatus::REJECTED]);
+        DB::transaction(function () use ($user) {
+            $from = $user->status;
+            $user->update(['status' => UserStatus::REJECTED]);
+
+            UserStatusChange::create([
+                'user_id' => $user->id,
+                'admin_id' => auth('admin')->id(),
+                'from_status' => $from instanceof UserStatus ? $from->value : (string) $from,
+                'to_status' => UserStatus::REJECTED->value,
+            ]);
+        });
 
         return redirect()->route('admin.users.review')->with('success', 'User rejected successfully');
     }
@@ -60,7 +82,17 @@ class UserReviewController extends Controller
                 ->with('error', 'Only verified or active users can be blocked.');
         }
 
-        $user->update(['status' => UserStatus::BLOCKED]);
+        DB::transaction(function () use ($user) {
+            $from = $user->status;
+            $user->update(['status' => UserStatus::BLOCKED]);
+
+            UserStatusChange::create([
+                'user_id' => $user->id,
+                'admin_id' => auth('admin')->id(),
+                'from_status' => $from instanceof UserStatus ? $from->value : (string) $from,
+                'to_status' => UserStatus::BLOCKED->value,
+            ]);
+        });
 
         return redirect()->route('admin.users.review')->with('success', 'User blocked successfully');
     }

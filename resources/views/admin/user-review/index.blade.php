@@ -77,7 +77,7 @@
                                                 @csrf
                                                 <button
                                                     type="submit"
-                                                    class="inline-flex items-center rounded-lg bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+                                                    class="inline-flex cursor-pointer items-center rounded-lg bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
                                                 >
                                                     Activate
                                                 </button>
@@ -87,7 +87,7 @@
                                                 @csrf
                                                 <button
                                                     type="submit"
-                                                    class="inline-flex items-center rounded-lg bg-rose-600 px-3 py-2 text-sm font-semibold text-white hover:bg-rose-700"
+                                                    class="inline-flex cursor-pointer items-center rounded-lg bg-rose-600 px-3 py-2 text-sm font-semibold text-white hover:bg-rose-700"
                                                 >
                                                     Reject
                                                 </button>
@@ -97,7 +97,7 @@
                                                 @csrf
                                                 <button
                                                     type="submit"
-                                                    class="inline-flex items-center rounded-lg bg-slate-900 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+                                                    class="inline-flex cursor-pointer items-center rounded-lg bg-slate-900 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-800"
                                                 >
                                                     Block
                                                 </button>
