@@ -17,17 +17,17 @@
             </div>
         </div>
 
-        <div class="mt-6 p-4 rounded-lg border {{ $user->status === 'active' ? 'bg-emerald-50 border-emerald-200' : 'bg-slate-50 border-slate-200' }}">
+        <div class="mt-6 p-4 rounded-lg border {{ $user->status === \App\UserStatus::ACTIVE ? 'bg-emerald-50 border-emerald-200' : 'bg-slate-50 border-slate-200' }}">
             <h4 class="font-bold flex items-center gap-2">
-                @if($user->status === 'active')
+                @if($user->status === \App\UserStatus::ACTIVE)
                     <span class="text-emerald-600">●</span> You have full voting rights.
                 @else
                     <span class="text-amber-500">●</span> Access Restricted
+                    <p class="text-sm text-slate-600 mt-1">
+                        Note: Only {{ strtoupper(\App\UserStatus::ACTIVE->label()) }} users can vote. To reach <strong>{{ strtoupper(\App\UserStatus::ACTIVE->label()) }}</strong> status, you must wait for an administrator to review and approve your credentials.
+                    </p>
                 @endif
             </h4>
-            <p class="text-sm text-slate-600 mt-1">
-                Note: Only {{ strtoupper(\App\UserStatus::ACTIVE->label()) }} users can vote. To reach <strong>{{ strtoupper(\App\UserStatus::ACTIVE->label()) }}</strong> status, you must wait for an administrator to review and approve your credentials.
-            </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
