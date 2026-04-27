@@ -19,7 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
         }
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->alias(['is_active', CheckActiveStatus::class]);
+        $middleware->alias(['active' => CheckActiveStatus::class]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
