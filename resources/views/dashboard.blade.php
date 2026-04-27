@@ -55,12 +55,24 @@
                         <input type="text" name="city" value="{{ $user->city }}" placeholder="Enter your city" class="w-full mt-1 rounded-md border-slate-300">
                     </div>
                     <div>
-                        <label class="text-xs font-bold text-slate-500">Country</label>
-                        <input type="text" name="country" value="{{ $user->country }}" placeholder="Enter your country" class="w-full mt-1 rounded-md border-slate-300">
+                        <label for="country_code" class="text-xs font-bold text-slate-500">Country</label>
+                        <select name="country_code" id="country_code" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="">Select a country...</option>
+                            <option value="GB" {{ auth()->user()->country_code == 'GB' ? 'selected' : '' }}>
+                                United Kingdom
+                            </option>
+                        </select>
+                        @error('country_code')
+                            <span class="text-red-500 text-xs">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div>
                         <label class="text-xs font-bold text-slate-500">Instagram Handle</label>
-                        <input type="text" name="instagram" value="{{ $user->instagram }}" placeholder="@username" class="w-full mt-1 rounded-md border-slate-300">
+                        <input type="text" name="instagram" value="{{ $user->socials['instagram'] ?? null }}" placeholder="@username" class="w-full mt-1 rounded-md border-slate-300">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-slate-500">Facebook URL</label>
+                        <input type="text" name="facebook" value="{{ $user->socials['facebook'] ?? null }}" placeholder="https://facebook.com/..." class="w-full mt-1 rounded-md border-slate-300">
                     </div>
                     <div>
                         <label class="text-xs font-bold text-slate-500">Website / Portfolio</label>

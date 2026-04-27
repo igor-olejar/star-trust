@@ -12,10 +12,8 @@ class ProfileController extends Controller
         $validated = $request->validated();
         $validated['socials'] = [
             'instagram' => $validated['instagram'] ?? null,
-            'website' => $validated['website'] ?? null,
+            'facebook' => $validated['facebook'] ?? null,
         ];
-
-        dd($validated);
 
         $user->update($validated);
 

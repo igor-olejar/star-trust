@@ -30,6 +30,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'city',
         'country_code',
         'socials',
+        'website',
     ];
 
     /**
@@ -88,5 +89,14 @@ class User extends Authenticatable implements MustVerifyEmail
     public function averageScore(): mixed
     {
         return $this->ratingsReceived()->avg('overall_rating') ?: 0;
+    }
+
+    public function getCountryNameAttribute(): string
+    {
+        $countries = [
+            'GB' => 'United Kingdom',
+        ];
+
+        return $countries[$this->country_code] ?? $this->country_code ?? 'Not Set';
     }
 }

@@ -24,9 +24,10 @@ class ProfileUpdateRequest extends FormRequest
     {
         return [
             'city' => ['nullable', 'string', 'max:255'],
-            'country_code' => ['nullable', 'string', 'max:255'],
+            'country_code' => ['nullable', 'string', 'size:2'],
             'instagram' => ['nullable', 'string', 'max:255'],
-            'website' => ['nullable', 'string', 'max:255'],
+            'facebook' => ['nullable', 'url:https', 'max:255'],
+            'website' => ['nullable', 'url:http,https', 'max:255'],
         ];
     }
 }
