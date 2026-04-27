@@ -46,10 +46,18 @@
                 </div>
 
             <div class="bg-white p-6 rounded-xl border border-slate-200">
-                <h3 class="font-bold text-slate-800 mb-4">Social Profiles</h3>
-                <form action="{{ route('profile.socials.update') }}" method="POST" class="space-y-4">
+                <h3 class="font-bold text-slate-800 mb-4">Profile</h3>
+                <form action="{{ route('profile.update') }}" method="POST" class="space-y-4">
                     @csrf
                     @method('PATCH')
+                    <div>
+                        <label class="text-xs font-bold text-slate-500">City</label>
+                        <input type="text" name="city" value="{{ $user->city }}" placeholder="Enter your city" class="w-full mt-1 rounded-md border-slate-300">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-slate-500">Country</label>
+                        <input type="text" name="country" value="{{ $user->country }}" placeholder="Enter your country" class="w-full mt-1 rounded-md border-slate-300">
+                    </div>
                     <div>
                         <label class="text-xs font-bold text-slate-500">Instagram Handle</label>
                         <input type="text" name="instagram" value="{{ $user->instagram }}" placeholder="@username" class="w-full mt-1 rounded-md border-slate-300">
@@ -59,7 +67,7 @@
                         <input type="url" name="website" value="{{ $user->website }}" placeholder="https://..." class="w-full mt-1 rounded-md border-slate-300">
                     </div>
                     <button class="w-full bg-slate-800 text-black py-2 rounded-lg text-sm font-semibold hover:bg-slate-700 transition">
-                        Update Socials
+                        Update Profile
                     </button>
                 </form>
             </div>

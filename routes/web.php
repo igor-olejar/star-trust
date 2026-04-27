@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\ProfileController;
 use App\UserStatus;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\RedirectResponse;
@@ -61,10 +62,7 @@ Route::post('/password/reset', [PasswordController::class, 'reset'])->name('pass
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::patch('/profile/socials/update', function (): RedirectResponse {
-        // Handle social media links update
-        return redirect()->route('dashboard')->with('message', 'Social media links updated!');
-    })->name('profile.socials.update');
+    Route::patch('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     //Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     //Route::post('/ratings', [RatingController::class, 'store'])->name('ratings.store');
 });
