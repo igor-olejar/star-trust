@@ -39,6 +39,7 @@ class UserFactory extends Factory
                 'facebook' => fake()->boolean() ? fake()->userName() : null,
                 'instagram' => fake()->boolean() ? fake()->userName() : null,
             ],
+            'website' => fake()->boolean() ? fake()->url() : null,
         ];
     }
 
