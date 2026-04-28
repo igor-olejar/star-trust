@@ -1,9 +1,6 @@
 <x-layout>
     <div class="max-w-4xl mx-auto my-12 px-4">
         <h1>HERE</h1>
-        @php
-            var_dump($results);
-        @endphp
         @foreach ($results as $result)
             <p>{{ $result->name }}</p>
         @endforeach

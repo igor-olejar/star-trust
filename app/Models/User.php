@@ -106,18 +106,20 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function toSearchableArray(): array
     {
-        return $this->only([
-            'id',
-            'name',
-            'email',
-            'city',
-            'country_code',
-            'user_type_id',
-        ]);
+        return [
+            'id'           => (int) $this->id,
+            'name'         => $this->name,
+            'email'        => $this->email,
+            'city'         => $this->city,
+            'country_code' => $this->country_code,
+            'user_type_label' => $this->user_type_id->label(),
+            'user_type_id' => $this->user_type_id->value,
+            'status'       => $this->status->value,
+        ];
     }
 
     protected function makeAllSearchableUsing($query): Builder
     {
-        return $query->where('status', UserStatus::ACTIVE);
+        return $query->where('status', UserStatus::ACTIVE->value);
     }
 }
