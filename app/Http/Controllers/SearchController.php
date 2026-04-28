@@ -12,6 +12,14 @@ class SearchController extends Controller
     {
         $query = $request->input('q');
 
+        if (!$request->filled('q')) {
+            return view('search.index', [
+                'results' => new \Illuminate\Pagination\LengthAwarePaginator([], 0, 15),
+                'query' => null,
+                'message' => 'Please enter a search term'
+            ]);
+        }
+
         $results = User::search($query, function ($meilisearch, $query, $options) {
             $filters = ["status = " . UserStatus::ACTIVE->value];
 
