@@ -24,6 +24,7 @@ class SearchController extends Controller
             return view('search.index', [
                 'results' => new \Illuminate\Pagination\LengthAwarePaginator([], 0, 15),
                 'query' => null,
+                'message' => 'Please enter a search term',
             ]);
         }
 
@@ -57,15 +58,14 @@ class SearchController extends Controller
      * Centralized logic for filtering and searching.
      * This keeps the logic DRY across index and suggestions.
      */
-    protected function applySearchLogic(?string $searchTerm): Builder
+    protected function applySearchLogic(?string $searchTerm)
     {
         // Use 'use' to bring the current user into the closure scope
         $authUser = Auth::user();
 
         return User::search($searchTerm, function ($meilisearch, $query, $options) use ($authUser) {
-            // Start with basic filters
             $filters = [
-                "status = " . UserStatus::ACTIVE->value,
+                "status = " . \App\UserStatus::ACTIVE->value,
                 "id != " . $authUser->id,
                 "user_type_id != " . $authUser->user_type_id->value,
             ];
@@ -78,15 +78,16 @@ class SearchController extends Controller
 
             $lowerQuery = strtolower(trim($query));
 
-            // If searching a type that ISN'T the user's own type, apply the filter
             if (array_key_exists($lowerQuery, $typeMap)) {
                 $targetTypeId = $typeMap[$lowerQuery];
-                if ($authUser->user_type_id->value !== $targetTypeId) {
-                    $filters[] = "user_type_id = $targetTypeId";
-                }
+                $filters[] = "user_type_id = $targetTypeId";
             }
 
             $options['filter'] = implode(' AND ', $filters);
+            //dd($options);
+
+            // --- DEBUG LINE ---
+            // \Log::info("Searching for: $query | Filter: " . $options['filter']);
 
             return $meilisearch->search($query, $options);
         });
