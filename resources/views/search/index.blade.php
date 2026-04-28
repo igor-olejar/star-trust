@@ -76,7 +76,7 @@
                         </svg>
                     </div>
                     <h2 class="text-2xl font-bold text-white">Find your next connection</h2>
-                    <p class="text-slate-500 mt-2 max-w-sm mx-auto">Please enter a search term above to browse the StarTrust global database.</p>
+                    <p class="text-slate-500 mt-2 max-w-sm mx-auto">Please enter a search term above to browse the StarTrust database.</p>
                 </div>
             @else
                 @forelse($results as $result)

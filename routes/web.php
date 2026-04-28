@@ -70,14 +70,4 @@ Route::middleware(['auth', 'verified', 'active'])->group(function () {
     Route::get('/search', [SearchController::class, 'index'])->name('search');
 });
 
-Route::get('/api/search-suggestions', function (Illuminate\Http\Request $request) {
-    $query = $request->input('q');
-    if (strlen($query) < 2) return response()->json([]);
-
-    $results = \App\Models\User::search($query)
-        ->where('status', UserStatus::ACTIVE->value)
-        ->take(5)
-        ->get();
-
-    return $results;
-})->name('api.search.suggestions');
+Route::get('/api/search-suggestions', [SearchController::class, 'searchSuggestions'])->name('api.search.suggestions');

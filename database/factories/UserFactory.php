@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\UserType;
+use App\UserType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -30,7 +30,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
-            'user_type_id' => UserType::inRandomOrder()->first()->id,
+            'user_type_id' => fake()->randomElement(UserType::cases()),
             'status' => fake()->randomElement(['verified', 'pending', 'blocked']),
             'city' => fake()->city(),
             'country_code' => fake()->countryCode(),
