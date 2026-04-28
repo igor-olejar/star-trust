@@ -141,8 +141,16 @@ return [
         'key' => env('MEILISEARCH_KEY', null),
         'index-settings' => [
             \App\Models\User::class => [
-                'filterableAttributes' => ['id', 'name', 'status', 'user_type'],
-                'sortableAttributes' => ['created_at'],
+                'filterableAttributes' => [
+                    'id',
+                    'name',
+                    'status',
+                    'user_type',
+                    'user_type_id',
+                    'country_name',
+                    'country_code',
+                ],
+                'sortableAttributes' => ['created_at', 'name'],
             ],
         ],
     ],

@@ -12,9 +12,24 @@ class SearchController extends Controller
     {
         $query = $request->input('q');
 
-        $results = User::search($query)
-            ->where('status', UserStatus::ACTIVE->value)
-            ->paginate(15);
+        $results = User::search($query, function ($meilisearch, $query, $options) {
+            $filters = ["status = " . UserStatus::ACTIVE->value];
+
+            $typeMap = [
+                'venue'    => 1,
+                'artist'   => 2,
+                'promoter' => 3,
+            ];
+
+            $lowerQuery = str_replace('s', '', strtolower(trim($query)));
+
+            if (array_key_exists($lowerQuery, $typeMap)) {
+                $filters[] = "user_type_id = " . $typeMap[$lowerQuery];
+            }
+
+            $options['filter'] = implode(' AND ', $filters);
+            return $meilisearch->search($query, $options);
+        })->paginate(15);
 
         return view('search.index', [
             'results' => $results,

@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Scout\Searchable;
+use Symfony\Component\Intl\Countries;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -106,12 +107,17 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function toSearchableArray(): array
     {
+        $fullCountryName = Countries::exists($this->country_code) 
+        ? Countries::getName($this->country_code) 
+        : '';
+
         return [
             'id'           => (int) $this->id,
             'name'         => $this->name,
             'email'        => $this->email,
             'city'         => $this->city,
             'country_code' => $this->country_code,
+            'country_name' => $fullCountryName,
             'user_type_label' => $this->user_type_id->label(),
             'user_type_id' => $this->user_type_id->value,
             'status'       => $this->status->value,
