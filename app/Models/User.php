@@ -119,7 +119,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'country_code' => $this->country_code,
             'country_name' => $fullCountryName,
             'user_type_label' => $this->user_type_id->label(),
-            'user_type_id' => $this->user_type_id->value,
+            'user_type_id' => (int) $this->user_type_id->value,
             'status'       => $this->status->value,
         ];
     }
