@@ -2,19 +2,23 @@
 
 namespace App\Models;
 
+use App\UserStatus;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Scout\Searchable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
     use Notifiable;
+    use Searchable;
 
     /**
      * The attributes that are mass assignable.
@@ -55,7 +59,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
             'user_type_id' => \App\UserType::class,
             'socials' => 'array',
-            'status' => \App\UserStatus::class,
+            'status' => UserStatus::class,
         ];
     }
 
@@ -98,5 +102,22 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
 
         return $countries[$this->country_code] ?? $this->country_code ?? 'Not Set';
+    }
+
+    public function toSearchableArray(): array
+    {
+        return $this->only([
+            'id',
+            'name',
+            'email',
+            'city',
+            'country_code',
+            'user_type_id',
+        ]);
+    }
+
+    protected function makeAllSearchableUsing($query): Builder
+    {
+        return $query->where('status', UserStatus::ACTIVE);
     }
 }
