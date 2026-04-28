@@ -23,9 +23,9 @@
             <h4 class="font-bold flex items-center gap-2">
                 @if($user->status === \App\UserStatus::ACTIVE)
                     <span class="text-emerald-600">●</span> You have full voting rights.<br />
-                        <a href="{{ route('search') }}" class="...">
-                            Launch Search
-                        </a>
+                    <a href="{{ route('search') }}" class="...">
+                        Launch Search
+                    </a>
                 @else
                     <span class="text-amber-500">●</span> Access Restricted
                     <p class="text-sm text-slate-600 mt-1">
@@ -91,7 +91,7 @@
                             class="w-full mt-1 rounded-md border-slate-300">
                     </div>
                     <button
-                        class="w-full bg-slate-800 text-black py-2 rounded-lg text-sm font-semibold hover:bg-slate-700 transition">
+                        class="w-full bg-indigo-600 text-white py-2.5 rounded-xl text-sm font-bold hover:bg-indigo-500 shadow-lg shadow-indigo-500/20 transition-all duration-200">
                         Update Profile
                     </button>
                 </form>
