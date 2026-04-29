@@ -8,6 +8,7 @@ use App\Http\Controllers\LandingController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
+use App\Models\User;
 use App\UserStatus;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\RedirectResponse;
@@ -33,7 +34,7 @@ Route::get('/email/verify/{id}/{hash}', function (
 ): View {
     $request->fulfill();
     $user = $request->user();
-    assert($user instanceof \App\Models\User);
+    assert($user instanceof User);
     $changeUserStatusAction->execute($user, UserStatus::VERIFIED);
 
     Auth::logout();

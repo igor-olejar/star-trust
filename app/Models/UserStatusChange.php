@@ -21,17 +21,11 @@ class UserStatusChange extends Model
         'created_at' => 'datetime',
     ];
 
-    /**
-     * @return BelongsTo
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function admin(): BelongsTo
     {
         return $this->belongsTo(Admin::class);

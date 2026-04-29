@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Rating extends Model
 {
     /**
-     * @param array<string, mixed> $fillable
+     * @param  array<string, mixed>  $fillable
      */
     protected $fillable = ['reviewer_id', 'target_id', 'target_type', 'overall_rating', 'comment'];
 

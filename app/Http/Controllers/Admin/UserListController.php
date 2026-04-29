@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\UserStatus;
-
 use Illuminate\Contracts\View\View;
 
 class UserListController extends Controller

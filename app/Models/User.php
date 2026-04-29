@@ -65,7 +65,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'user_type_id' => \App\UserType::class,
+            'user_type_id' => UserType::class,
             'socials' => 'array',
             'status' => UserStatus::class,
         ];
@@ -133,7 +133,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * @param Builder<User> $query
+     * @param  Builder<User>  $query
      * @return Builder<User>
      */
     protected function makeAllSearchableUsing($query): Builder

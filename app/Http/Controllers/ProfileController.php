@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\ProfileUpdateRequest;
+use Illuminate\Http\RedirectResponse;
 
 class ProfileController extends Controller
 {

@@ -57,7 +57,6 @@ class SearchController extends Controller
     /**
      * Centralized logic for filtering and searching.
      * This keeps the logic DRY across index and suggestions.
-     * @return Builder
      */
     protected function applySearchLogic(?string $searchTerm): Builder
     {
