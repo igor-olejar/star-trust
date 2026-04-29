@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\UserStatus;
+use App\UserType;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
@@ -15,6 +16,10 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Scout\Searchable;
 use Symfony\Component\Intl\Countries;
 
+/**
+ * @property UserType $user_type_id
+ * @property UserStatus $status
+ */
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
@@ -73,7 +78,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function userType(): BelongsTo
     {
-        return $this->belongsTo(UserType::class);
+        return $this->belongsTo(\App\Models\UserType::class);
     }
 
     // Ratings this user has written

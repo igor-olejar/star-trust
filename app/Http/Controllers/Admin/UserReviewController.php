@@ -43,7 +43,7 @@ class UserReviewController extends Controller
             UserStatusChange::create([
                 'user_id' => $user->id,
                 'admin_id' => auth('admin')->id(),
-                'from_status' => $from instanceof UserStatus ? $from->value : (string) $from,
+                'from_status' => $from->value,
                 'to_status' => UserStatus::ACTIVE->value,
             ]);
         });
@@ -66,7 +66,7 @@ class UserReviewController extends Controller
             UserStatusChange::create([
                 'user_id' => $user->id,
                 'admin_id' => auth('admin')->id(),
-                'from_status' => $from instanceof UserStatus ? $from->value : (string) $from,
+                'from_status' => $from->value,
                 'to_status' => UserStatus::REJECTED->value,
             ]);
         });
@@ -89,7 +89,7 @@ class UserReviewController extends Controller
             UserStatusChange::create([
                 'user_id' => $user->id,
                 'admin_id' => auth('admin')->id(),
-                'from_status' => $from instanceof UserStatus ? $from->value : (string) $from,
+                'from_status' => $from->value,
                 'to_status' => UserStatus::BLOCKED->value,
             ]);
         });
