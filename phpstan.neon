@@ -7,4 +7,9 @@ parameters:
         - config/
         - routes/
 
-    level: 5
+    level: 7
+
+    reportUnmatchedIgnoredErrors: false
+    ignoreErrors:
+        # Relationship methods don't need explicit generic types
+        - '#return type with generic class.*does not specify its types#'

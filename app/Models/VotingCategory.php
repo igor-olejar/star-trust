@@ -9,6 +9,9 @@ class VotingCategory extends Model
 {
     protected $fillable = ['name'];
 
+    /**
+     * @return HasMany
+     */
     public function ratingItems(): HasMany
     {
         return $this->hasMany(RatingItem::class);

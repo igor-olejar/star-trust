@@ -9,6 +9,9 @@ class UserType extends Model
 {
     protected $fillable = ['name'];
 
+    /**
+     * @return HasMany
+     */
     public function users(): HasMany
     {
         return $this->hasMany(User::class);

@@ -8,13 +8,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Rating extends Model
 {
-    // The user who wrote the review
+    /**
+     * @param array<string, mixed> $fillable
+     */
+    protected $fillable = ['reviewer_id', 'target_id', 'target_type', 'overall_rating', 'comment'];
+
     public function reviewer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'reviewer_id');
     }
 
-    // The user being reviewed (Artist, Venue, or Promoter)
     public function target(): BelongsTo
     {
         return $this->belongsTo(User::class, 'target_id');
@@ -27,6 +30,6 @@ class Rating extends Model
 
     public function targetType(): BelongsTo
     {
-        return $this->belongsTo(UserType::class, 'target_type_id');
+        return $this->belongsTo(VotingCategory::class, 'target_type_id');
     }
 }

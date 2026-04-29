@@ -32,7 +32,9 @@ Route::get('/email/verify/{id}/{hash}', function (
     ChangeUserStatusAction $changeUserStatusAction,
 ): View {
     $request->fulfill();
-    $changeUserStatusAction->execute($request->user(), UserStatus::VERIFIED);
+    $user = $request->user();
+    assert($user instanceof \App\Models\User);
+    $changeUserStatusAction->execute($user, UserStatus::VERIFIED);
 
     Auth::logout();
     session()->invalidate();
@@ -70,6 +72,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::middleware(['auth', 'verified', 'active'])->group(function () {
     Route::get('/search', [SearchController::class, 'index'])->name('search');
+    Route::get('/api/search-suggestions', [SearchController::class, 'searchSuggestions'])->name('api.search.suggestions');
 });
-
-Route::get('/api/search-suggestions', [SearchController::class, 'searchSuggestions'])->name('api.search.suggestions');

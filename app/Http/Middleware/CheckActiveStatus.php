@@ -17,7 +17,7 @@ class CheckActiveStatus
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && Auth::user()->status !== UserStatus::ACTIVE) {
+        if (Auth::check() && Auth::guard('web')->user()?->status !== UserStatus::ACTIVE) {
             return redirect('/dashboard')->with('error', 'Your account must be approved by an admin before you can perform this action.');
         }
 

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Laravel\Scout\Builder;
 
 class SearchController extends Controller
 {
@@ -56,11 +57,12 @@ class SearchController extends Controller
     /**
      * Centralized logic for filtering and searching.
      * This keeps the logic DRY across index and suggestions.
+     * @return Builder
      */
-    protected function applySearchLogic(?string $searchTerm)
+    protected function applySearchLogic(?string $searchTerm): Builder
     {
         // Use 'use' to bring the current user into the closure scope
-        $authUser = Auth::user();
+        $authUser = Auth::guard('web')->user();
 
         return User::search($searchTerm, function ($meilisearch, $query, $options) use ($authUser) {
             $filters = [
@@ -83,10 +85,6 @@ class SearchController extends Controller
             }
 
             $options['filter'] = implode(' AND ', $filters);
-            // dd($options);
-
-            // --- DEBUG LINE ---
-            // \Log::info("Searching for: $query | Filter: " . $options['filter']);
 
             return $meilisearch->search($query, $options);
         });

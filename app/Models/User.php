@@ -81,13 +81,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsTo(\App\Models\UserType::class);
     }
 
-    // Ratings this user has written
     public function ratingsGiven(): HasMany
     {
         return $this->hasMany(Rating::class, 'reviewer_id');
     }
 
-    // Ratings other people have left for this user
     public function ratingsReceived(): HasMany
     {
         return $this->hasMany(Rating::class, 'target_id');
@@ -112,6 +110,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $countries[$this->country_code] ?? $this->country_code ?? 'Not Set';
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toSearchableArray(): array
     {
         $fullCountryName = Countries::exists($this->country_code)
@@ -131,6 +132,10 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
+    /**
+     * @param Builder<User> $query
+     * @return Builder<User>
+     */
     protected function makeAllSearchableUsing($query): Builder
     {
         return $query->where('status', UserStatus::ACTIVE->value);
