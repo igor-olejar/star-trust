@@ -8,6 +8,7 @@ use App\Http\Controllers\LandingController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\VotingController;
 use App\Models\User;
 use App\UserStatus;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -74,4 +75,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth', 'verified', 'active'])->group(function () {
     Route::get('/search', [SearchController::class, 'index'])->name('search');
     Route::get('/api/search-suggestions', [SearchController::class, 'searchSuggestions'])->name('api.search.suggestions');
+});
+
+Route::middleware(['auth', 'verified', 'active', 'can_vote'])->group(function () {
+    Route::get('/vote/{target_user_id}', [VotingController::class, 'show'])->name('vote.show');
 });
