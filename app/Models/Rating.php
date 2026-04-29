@@ -6,12 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property int $reviewer_id
+ * @property int $target_id
+ * @property int|null $target_type_id
+ * @property float $overall_rating
+ * @property string|null $comment
+ */
 class Rating extends Model
 {
     /**
      * @param  array<string, mixed>  $fillable
      */
-    protected $fillable = ['reviewer_id', 'target_id', 'target_type', 'overall_rating', 'comment'];
+    protected $fillable = ['reviewer_id', 'target_id', 'target_type', 'target_type_id', 'overall_rating', 'comment'];
 
     public function reviewer(): BelongsTo
     {

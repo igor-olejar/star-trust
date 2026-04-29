@@ -13,12 +13,25 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 use Laravel\Scout\Searchable;
 use Symfony\Component\Intl\Countries;
 
 /**
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property string $password
  * @property UserType $user_type_id
  * @property UserStatus $status
+ * @property string|null $city
+ * @property string|null $country_code
+ * @property array<string, string|null>|null $socials
+ * @property string|null $website
+ * @property string|null $remember_token
+ * @property Carbon|null $email_verified_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  */
 class User extends Authenticatable implements MustVerifyEmail
 {

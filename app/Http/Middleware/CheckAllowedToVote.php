@@ -20,7 +20,7 @@ class CheckAllowedToVote
         $targetUserId = $request->input('target_user_id');
         $currentUser = Auth::guard('web')->user();
 
-        if (!$currentUser) {
+        if (! $currentUser) {
             return redirect()->route('login')->with('error', 'You must be logged in to vote.');
         }
 
