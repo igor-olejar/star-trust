@@ -96,9 +96,14 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(UserStatusChange::class);
     }
 
-    public function averageScore(): mixed
+    public function averageScore(): float
     {
-        return $this->ratingsReceived()->avg('overall_rating') ?: 0;
+        return (float) $this->ratingsReceived()->avg('overall_rating') ?: 0;
+    }
+
+    public function totalRatingsCount(): int
+    {
+        return $this->ratingsReceived()->count();
     }
 
     public function getCountryNameAttribute(): string
