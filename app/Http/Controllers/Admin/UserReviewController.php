@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\UserStatusChange;
 use App\Models\User;
+use App\Models\UserStatusChange;
 use App\UserStatus;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class UserReviewController extends Controller
@@ -30,7 +30,7 @@ class UserReviewController extends Controller
 
     public function activate(Request $request, User $user): RedirectResponse
     {
-        if (!in_array($user->status, [UserStatus::PENDING, UserStatus::VERIFIED, UserStatus::BLOCKED], true)) {
+        if (! in_array($user->status, [UserStatus::PENDING, UserStatus::VERIFIED, UserStatus::BLOCKED], true)) {
             return redirect()
                 ->route('admin.users.review.show', $user)
                 ->with('error', 'Only pending, verified, or blocked users can be activated.');
@@ -53,7 +53,7 @@ class UserReviewController extends Controller
 
     public function reject(Request $request, User $user): RedirectResponse
     {
-        if (!in_array($user->status, [UserStatus::PENDING, UserStatus::VERIFIED, UserStatus::ACTIVE], true)) {
+        if (! in_array($user->status, [UserStatus::PENDING, UserStatus::VERIFIED, UserStatus::ACTIVE], true)) {
             return redirect()
                 ->route('admin.users.review.show', $user)
                 ->with('error', 'Only pending, verified, or active users can be rejected.');
@@ -76,7 +76,7 @@ class UserReviewController extends Controller
 
     public function block(Request $request, User $user): RedirectResponse
     {
-        if (!in_array($user->status, [UserStatus::VERIFIED, UserStatus::ACTIVE], true)) {
+        if (! in_array($user->status, [UserStatus::VERIFIED, UserStatus::ACTIVE], true)) {
             return redirect()
                 ->route('admin.users.review.show', $user)
                 ->with('error', 'Only verified or active users can be blocked.');
@@ -97,4 +97,3 @@ class UserReviewController extends Controller
         return redirect()->route('admin.users.review')->with('success', 'User blocked successfully');
     }
 }
-

@@ -19,7 +19,7 @@ use Illuminate\View\View;
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-route::post('/register', [RegisterController::class, 'register']);
+Route::post('/register', [RegisterController::class, 'register']);
 
 // 1. The "Notice" page (tells user to check their email)
 Route::get('/email/verify', function () {
@@ -44,6 +44,7 @@ Route::get('/email/verify/{id}/{hash}', function (
 // 3. The "Resend" handler
 Route::post('/email/verification-notification', function (Request $request): RedirectResponse {
     $request->user()->sendEmailVerificationNotification();
+
     return back()->with('message', 'Verification link sent!');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
@@ -52,6 +53,7 @@ Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
 
 Route::get('/logout', function (): RedirectResponse {
     Auth::logout();
+
     return redirect()->route('landing');
 })->name('logout');
 

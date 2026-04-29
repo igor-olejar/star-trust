@@ -31,4 +31,3 @@ class UserStatusChange extends Model
         return $this->belongsTo(Admin::class);
     }
 }
-

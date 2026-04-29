@@ -24,11 +24,12 @@ class AdminAuthController extends Controller
 
         if (Auth::guard('admin')->attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
+
             return redirect()->intended('/admin/dashboard');
         }
 
         return redirect()->back()->withErrors([
-           'email' => 'The provided credentials do not match our records.',
+            'email' => 'The provided credentials do not match our records.',
         ])->onlyInput('email');
     }
 
@@ -37,6 +38,7 @@ class AdminAuthController extends Controller
         Auth::guard('admin')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
         return redirect('/admin/login');
     }
 }

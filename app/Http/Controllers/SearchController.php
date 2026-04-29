@@ -6,10 +6,9 @@ use App\Models\User;
 use App\UserStatus;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
-use Illuminate\Support\Facades\Log;
-use Laravel\Scout\Builder;
 
 class SearchController extends Controller
 {
@@ -20,9 +19,9 @@ class SearchController extends Controller
     {
         $query = $request->input('q');
 
-        if (!$request->filled('q')) {
+        if (! $request->filled('q')) {
             return view('search.index', [
-                'results' => new \Illuminate\Pagination\LengthAwarePaginator([], 0, 15),
+                'results' => new LengthAwarePaginator([], 0, 15),
                 'query' => null,
                 'message' => 'Please enter a search term',
             ]);
@@ -65,14 +64,14 @@ class SearchController extends Controller
 
         return User::search($searchTerm, function ($meilisearch, $query, $options) use ($authUser) {
             $filters = [
-                "status = " . \App\UserStatus::ACTIVE->value,
-                "id != " . $authUser->id,
-                "user_type_id != " . $authUser->user_type_id->value,
+                'status = '.UserStatus::ACTIVE->value,
+                'id != '.$authUser->id,
+                'user_type_id != '.$authUser->user_type_id->value,
             ];
 
             $typeMap = [
-                'venue'    => 1, 'venues'    => 1,
-                'artist'   => 2, 'artists'   => 2,
+                'venue' => 1, 'venues' => 1,
+                'artist' => 2, 'artists' => 2,
                 'promoter' => 3, 'promoters' => 3,
             ];
 
@@ -84,7 +83,7 @@ class SearchController extends Controller
             }
 
             $options['filter'] = implode(' AND ', $filters);
-            //dd($options);
+            // dd($options);
 
             // --- DEBUG LINE ---
             // \Log::info("Searching for: $query | Filter: " . $options['filter']);

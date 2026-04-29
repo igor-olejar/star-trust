@@ -7,8 +7,8 @@ use App\Models\User;
 use App\Models\UserStatusChange;
 use App\Models\UserType;
 use App\UserStatus;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class UserReviewTransitionsTest extends TestCase
@@ -192,4 +192,3 @@ class UserReviewTransitionsTest extends TestCase
         $this->assertSame(0, UserStatusChange::count());
     }
 }
-

@@ -13,8 +13,8 @@ class GenreSeeder extends Seeder
     public function run(): void
     {
         $genres = [
-            'Rock', 'Hip Hop', 'Jazz', 'Electronic', 
-            'Classical', 'Folk', 'R&B', 'Metal'
+            'Rock', 'Hip Hop', 'Jazz', 'Electronic',
+            'Classical', 'Folk', 'R&B', 'Metal',
         ];
 
         foreach ($genres as $genre) {

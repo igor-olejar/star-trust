@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\UserStatus;
+use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,8 +17,9 @@ use Symfony\Component\Intl\Countries;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<UserFactory> */
     use HasFactory;
+
     use Notifiable;
     use Searchable;
 
@@ -107,20 +109,20 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function toSearchableArray(): array
     {
-        $fullCountryName = Countries::exists($this->country_code) 
-        ? Countries::getName($this->country_code) 
+        $fullCountryName = Countries::exists($this->country_code)
+        ? Countries::getName($this->country_code)
         : '';
 
         return [
-            'id'           => (int) $this->id,
-            'name'         => $this->name,
-            'email'        => $this->email,
-            'city'         => $this->city,
+            'id' => (int) $this->id,
+            'name' => $this->name,
+            'email' => $this->email,
+            'city' => $this->city,
             'country_code' => $this->country_code,
             'country_name' => $fullCountryName,
             'user_type_label' => $this->user_type_id->label(),
             'user_type_id' => (int) $this->user_type_id->value,
-            'status'       => (string) $this->status->value,
+            'status' => (string) $this->status->value,
         ];
     }
 

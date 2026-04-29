@@ -6,6 +6,7 @@ use App\Models\User;
 use App\UserStatus;
 use App\UserType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Tests\TestCase;
 
 class SearchControllerTest extends TestCase
@@ -13,7 +14,9 @@ class SearchControllerTest extends TestCase
     use RefreshDatabase;
 
     protected User $artistUser;
+
     protected User $venueUser;
+
     protected User $promoterUser;
 
     protected function setUp(): void
@@ -41,7 +44,7 @@ class SearchControllerTest extends TestCase
     }
 
     // Tests for index() method
-    
+
     public function test_search_route_requires_authentication(): void
     {
         $response = $this->get('/search?q=test');
@@ -94,7 +97,7 @@ class SearchControllerTest extends TestCase
 
         // Should not contain the authenticated venue user (always filtered by id != Auth::id())
         $this->assertNotContains($this->venueUser->id, $resultIds);
-        
+
         // Should not contain another venue user when type filter is applied
         // (This tests that user_type_id filter is applied when search term matches)
         $this->assertNotContains($anotherVenue->id, $resultIds);
@@ -119,7 +122,7 @@ class SearchControllerTest extends TestCase
 
         // Should not contain the authenticated promoter user
         $this->assertNotContains($this->promoterUser->id, $resultIds);
-        
+
         // Should not contain another promoter user (because user_type_id filter applies)
         $this->assertNotContains($anotherPromoter->id, $resultIds);
     }
@@ -151,9 +154,9 @@ class SearchControllerTest extends TestCase
 
         $response->assertStatus(200);
         $results = $response->viewData('results');
-        
+
         // Should be a paginated result set
-        $this->assertInstanceOf(\Illuminate\Pagination\LengthAwarePaginator::class, $results);
+        $this->assertInstanceOf(LengthAwarePaginator::class, $results);
     }
 
     // Tests for searchSuggestions() method

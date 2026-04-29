@@ -14,7 +14,7 @@ class PasswordController extends Controller
 
         $user = User::where('email', $validated['email'])->first();
 
-        if (!$user) {
+        if (! $user) {
             return back()->withErrors(['email' => 'No user found with this email address.']);
         }
 

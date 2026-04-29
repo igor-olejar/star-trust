@@ -12,11 +12,11 @@ class UserTypeSeeder extends Seeder
      */
     public function run(): void
     {
-            $userTypes = ['Venue', 'Artist', 'Promoter'];
+        $userTypes = ['Venue', 'Artist', 'Promoter'];
 
-            foreach ($userTypes as $userType) {
-                UserType::firstOrCreate(['name' => $userType]);
-            }
-    
+        foreach ($userTypes as $userType) {
+            UserType::firstOrCreate(['name' => $userType]);
+        }
+
     }
 }
