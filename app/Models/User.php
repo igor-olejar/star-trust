@@ -125,7 +125,11 @@ class User extends Authenticatable implements MustVerifyEmail
             'GB' => 'United Kingdom',
         ];
 
-        return $countries[$this->country_code] ?? $this->country_code ?? 'Not Set';
+        if (! $this->country_code) {
+            return 'Not Set';
+        }
+
+        return $countries[$this->country_code] ?? $this->country_code;
     }
 
     /**
@@ -133,7 +137,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function toSearchableArray(): array
     {
-        $fullCountryName = Countries::exists($this->country_code)
+        $fullCountryName = $this->country_code && Countries::exists($this->country_code)
         ? Countries::getName($this->country_code)
         : '';
 

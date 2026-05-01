@@ -63,12 +63,14 @@ class SearchController extends Controller
         // Use 'use' to bring the current user into the closure scope
         $authUser = Auth::guard('web')->user();
 
-        return User::search($searchTerm, function ($meilisearch, $query, $options) use ($authUser) {
+        return User::search($searchTerm ?? '', function ($meilisearch, $query, $options) use ($authUser) {
             $filters = [
                 'status = '.UserStatus::ACTIVE->value,
-                'id != '.$authUser->id,
-                'user_type_id != '.$authUser->user_type_id->value,
             ];
+            if ($authUser) {
+                $filters[] = 'id != '.$authUser->id;
+                $filters[] = 'user_type_id != '.$authUser->user_type_id->value;
+            }
 
             $typeMap = [
                 'venue' => 1, 'venues' => 1,

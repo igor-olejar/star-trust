@@ -10,6 +10,9 @@ class ProfileController extends Controller
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $user = $request->user();
+        if (! $user) {
+            return redirect()->route('dashboard')->with('error', 'User not found');
+        }
         $validated = $request->validated();
         $validated['socials'] = [
             'instagram' => $validated['instagram'] ?? null,

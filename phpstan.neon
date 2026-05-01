@@ -7,7 +7,7 @@ parameters:
         - config/
         - routes/
 
-    level: 7
+    level: 8
 
     reportUnmatchedIgnoredErrors: false
     ignoreErrors:

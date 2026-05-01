@@ -47,7 +47,10 @@ Route::get('/email/verify/{id}/{hash}', function (
 
 // 3. The "Resend" handler
 Route::post('/email/verification-notification', function (Request $request): RedirectResponse {
-    $request->user()->sendEmailVerificationNotification();
+    $user = $request->user();
+    if ($user) {
+        $user->sendEmailVerificationNotification();
+    }
 
     return back()->with('message', 'Verification link sent!');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
