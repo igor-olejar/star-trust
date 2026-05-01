@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\VotingRequest;
 use App\Models\Rating;
 use App\Models\RatingItem;
 use App\Models\User;
@@ -16,36 +17,44 @@ class VotingController extends Controller
     public function show(Request $request, int $targetUserId): View
     {
         $targetUser = User::findOrFail($targetUserId);
+        $reviewerHash = hash_hmac('sha256', Auth::id(), config('app.key'));
         $categories = VotingCategory::where('target_type_id', $targetUser->user_type_id->value)
             ->get();
 
-        return view('voting.show', compact('targetUser', 'categories'));
+        $existingRatings = $targetUser->ratingsReceived()
+            ->where('reviewer_id', $reviewerHash)
+            ->first()
+            ?->ratingItems
+            ->pluck('number_of_votes', 'voting_category_id') ?? collect();
+
+        return view('voting.show', compact('targetUser', 'categories', 'existingRatings'));
     }
 
-    public function saveRating(Request $request): JsonResponse
+    public function saveRating(VotingRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'target_user_id' => 'required|exists:users,id',
-            'category_id' => 'required|exists:voting_categories,id',
-            'stars' => 'required|integer|min:1|max:5',
-        ]);
+        $validated = $request->validated();
 
         $targetUser = User::findOrFail($validated['target_user_id']);
         /** @var User $targetUser */
         $authUser = Auth::guard('web')->user();
         /** @var User $authUser */
+
+        $reviewerHash = hash_hmac('sha256', $authUser->id, config('app.key'));
+
         $rating = Rating::updateOrCreate(
             [
-                'reviewer_id' => $authUser->id,
+                'reviewer_id' => $reviewerHash,
                 'target_id' => $targetUser->id,
             ],
             [
                 'target_type_id' => $targetUser->user_type_id->value,
-                'overall_rating' => $validated['stars'], // Temporary initial value
+                'overall_rating' => $validated['stars'],
             ]
         );
 
-        $ratingItem = $rating->ratingItems()->where('voting_category_id', $validated['category_id'])->first();
+        $ratingItem = $rating->ratingItems()
+            ->where('voting_category_id', $validated['category_id'])
+            ->first();
 
         if ($ratingItem instanceof RatingItem) {
             $ratingItem->update([
