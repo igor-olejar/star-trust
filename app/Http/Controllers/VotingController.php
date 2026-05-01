@@ -14,33 +14,52 @@ use Illuminate\View\View;
 
 class VotingController extends Controller
 {
+    /**
+     * Display the voting page for a specific user.
+     */
     public function show(Request $request, int $targetUserId): View
     {
         $targetUser = User::findOrFail($targetUserId);
+        
         $reviewerHash = hash_hmac('sha256', Auth::id(), config('app.key'));
+
         $categories = VotingCategory::where('target_type_id', $targetUser->user_type_id->value)
             ->get();
 
-        $existingRatings = $targetUser->ratingsReceived()
-            ->where('reviewer_id', $reviewerHash)
-            ->first()
-            ?->ratingItems
-            ->pluck('number_of_votes', 'voting_category_id') ?? collect();
+        // Fetch the single rating record for this anonymous reviewer
+        $ratingRecord = Rating::where('reviewer_id', $reviewerHash)
+            ->where('target_id', $targetUserId)
+            ->first();
 
-        return view('voting.show', compact('targetUser', 'categories', 'existingRatings'));
+        // Prepare simple arrays for Alpine.js initialization in the view
+        $existingScores = [];
+        $existingVotes = [];
+
+        if ($ratingRecord) {
+            foreach ($ratingRecord->ratingItems as $item) {
+                $existingScores[$item->voting_category_id] = $item->score;
+                $existingVotes[$item->voting_category_id] = $item->number_of_votes;
+            }
+        }
+
+        return view('voting.show', compact(
+            'targetUser', 
+            'categories', 
+            'existingScores', 
+            'existingVotes'
+        ));
     }
 
+    /**
+     * Save or update a rating for a specific category.
+     */
     public function saveRating(VotingRequest $request): JsonResponse
     {
         $validated = $request->validated();
 
         $targetUser = User::findOrFail($validated['target_user_id']);
-        /** @var User $targetUser */
-        $authUser = Auth::guard('web')->user();
-        /** @var User $authUser */
-
-        $reviewerHash = hash_hmac('sha256', $authUser->id, config('app.key'));
-
+        $reviewerHash = hash_hmac('sha256', Auth::id(), config('app.key'));
+        // 1. Get or Create the parent Rating record
         $rating = Rating::updateOrCreate(
             [
                 'reviewer_id' => $reviewerHash,
@@ -48,20 +67,27 @@ class VotingController extends Controller
             ],
             [
                 'target_type_id' => $targetUser->user_type_id->value,
-                'overall_rating' => $validated['stars'],
+                'overall_rating' => $validated['stars'], // Initial temporary value
             ]
         );
 
+        // 2. Manage the specific RatingItem
         $ratingItem = $rating->ratingItems()
             ->where('voting_category_id', $validated['category_id'])
             ->first();
 
         if ($ratingItem instanceof RatingItem) {
+            // Backend Guard: Ensure the 3-vote limit is respected
+            if ($ratingItem->number_of_votes >= 3) {
+                return response()->json(['error' => 'Vote limit reached for this category'], 403);
+            }
+
             $ratingItem->update([
                 'score' => $validated['stars'],
                 'number_of_votes' => $ratingItem->number_of_votes + 1, // Increment count
             ]);
         } else {
+            // First time voting in this category
             $ratingItem = $rating->ratingItems()->create([
                 'voting_category_id' => $validated['category_id'],
                 'score' => $validated['stars'],
@@ -74,13 +100,15 @@ class VotingController extends Controller
 
         $totalWeightedScore = 0;
         foreach ($items as $item) {
-            // Multiply the score by the category weight (e.g., 0.3) from the DB
-            assert($item instanceof RatingItem);
+            /** @var RatingItem $item */
             /** @var VotingCategory $votingCategory */
             $votingCategory = $item->votingCategory;
+            
+            // Apply the weight defined in the category (e.g., 0.3) to the star score
             $totalWeightedScore += ($item->score * $votingCategory->weight);
         }
 
+        // Update the parent record with the final calculated score
         $rating->update(['overall_rating' => $totalWeightedScore]);
 
         return response()->json([
