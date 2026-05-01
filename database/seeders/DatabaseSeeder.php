@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             UserTypeSeeder::class,
             GenreSeeder::class,
             VotingCategorySeeder::class,
+            CommentSeeder::class,
         ]);
 
         $users = User::factory(30)->create();

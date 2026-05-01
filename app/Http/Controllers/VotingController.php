@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CommentRequest;
 use App\Http\Requests\VotingRequest;
+use App\Models\Comment;
 use App\Models\Rating;
 use App\Models\RatingItem;
 use App\Models\User;
 use App\Models\VotingCategory;
+use Blaspsoft\Blasp\Facades\Blasp;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +23,7 @@ class VotingController extends Controller
     public function show(Request $request, int $targetUserId): View
     {
         $targetUser = User::findOrFail($targetUserId);
-        
+
         $reviewerHash = hash_hmac('sha256', Auth::id(), config('app.key'));
 
         $categories = VotingCategory::where('target_type_id', $targetUser->user_type_id->value)
@@ -42,11 +45,17 @@ class VotingController extends Controller
             }
         }
 
+        $comments = Comment::where('reviewer_hash', $reviewerHash)
+                        ->where('target_id', $targetUserId)
+                        ->latest()
+                        ->paginate(10);
+
         return view('voting.show', compact(
-            'targetUser', 
-            'categories', 
-            'existingScores', 
-            'existingVotes'
+            'targetUser',
+            'categories',
+            'existingScores',
+            'existingVotes',
+            'comments',
         ));
     }
 
@@ -103,7 +112,7 @@ class VotingController extends Controller
             /** @var RatingItem $item */
             /** @var VotingCategory $votingCategory */
             $votingCategory = $item->votingCategory;
-            
+
             // Apply the weight defined in the category (e.g., 0.3) to the star score
             $totalWeightedScore += ($item->score * $votingCategory->weight);
         }
@@ -115,5 +124,33 @@ class VotingController extends Controller
             'success' => true,
             'new_average' => round($targetUser->averageScore(), 1),
         ]);
+    }
+
+    public function saveComment(CommentRequest $request): JsonResponse
+    {
+        $validated = $request->validated();
+
+        $check = Blasp::check($validated['comment']);
+        if ($check->isOffensive()) {
+            return response()->json(['error' => 'Inappropriate content detected'], 422);
+        }
+
+        $reviewerHash = hash_hmac('sha256', Auth::id(), config('app.key'));
+        
+        $count = Comment::where('reviewer_hash', $reviewerHash)
+            ->where('target_id', $validated['target_user_id'])
+            ->count();
+
+        if ($count >= 3) {
+            return response()->json(['error' => 'Comment limit reached for this user'], 403);
+        }
+
+        Comment::create([
+            'reviewer_hash' => $reviewerHash,
+            'target_id' => $validated['target_user_id'],
+            'content' => $validated['comment'],
+        ]);
+
+        return response()->json(['success' => true, 'comment count' => $count + 1]);
     }
 }
