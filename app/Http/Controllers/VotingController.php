@@ -148,7 +148,7 @@ class VotingController extends Controller
         Comment::create([
             'reviewer_hash' => $reviewerHash,
             'target_id' => $validated['target_user_id'],
-            'content' => $validated['comment'],
+            'comment' => $validated['comment'],
         ]);
 
         return response()->json(['success' => true, 'comment count' => $count + 1]);

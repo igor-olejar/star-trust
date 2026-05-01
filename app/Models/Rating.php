@@ -19,7 +19,7 @@ class Rating extends Model
     /**
      * @param  array<string, mixed>  $fillable
      */
-    protected $fillable = ['reviewer_id', 'target_id', 'target_type', 'target_type_id', 'overall_rating', 'comment'];
+    protected $fillable = ['reviewer_id', 'target_id', 'target_type', 'target_type_id', 'overall_rating'];
 
     public function reviewer(): BelongsTo
     {
