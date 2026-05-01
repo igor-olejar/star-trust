@@ -82,6 +82,6 @@ Route::middleware(['auth', 'verified', 'active'])->group(function () {
 
 Route::middleware(['auth', 'verified', 'active', 'can_vote'])->group(function () {
     Route::get('/vote/{target_user_id}', [VotingController::class, 'show'])->name('vote.show');
-    Route::post('/vote/save', [VotingController::class, 'saveRating'])->name('vote.save');
-    Route::post('/vote/comment', [VotingController::class, 'saveComment'])->name('vote.comment');
+    Route::post('/vote/save', [VotingController::class, 'saveRating'])->name('vote.save')->middleware('throttle:10,1');
+    Route::post('/vote/comment', [VotingController::class, 'saveComment'])->name('vote.comment')->middleware('throttle:5,1');
 });
